@@ -1,0 +1,22 @@
+version: 2.1
+
+jobs:
+  frontend:
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - run:
+          name: Build front-end
+          command: |
+            cd frontend
+            docker build -t datht20fpt/capstone-frontend .
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
+            docker push datht20fpt/capstone-frontend:latest
+workflows:
+  version: 2
+  deploy_workflow:
+    jobs:
+      - frontend
