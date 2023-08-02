@@ -6,12 +6,33 @@ jobs:
       - image: docker:17.05.0-ce-git
     steps:
       - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-{{ .Branch }}
+          paths:
+            - /caches/udagram-frontend.tar
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            # set +o pipefail
+            if [[ -f "/caches/app.tar" ]]; then
+              docker load -i /caches/app.tar | true
+            fi
       - run:
           name: Build front-end
           command: |
-            pwd
-            cd udagram-frontend
+            cd frontend
             docker build -t datht20fpt/udagram-frontend .
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /caches
+            docker save -o /caches/udagram-frontend.tar datht20fpt/udagram-frontend
+      - save_cache:
+          key: v1-{{ .Branch }}-{{ epoch }}
+          paths:
+            - /caches/udagram-frontend.tar
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
