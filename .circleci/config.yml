@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cd frontend
+            cd udagram-frontend
             docker build -t datht20fpt/udagram-frontend .
       - run:
           name: Save Docker image layer cache
