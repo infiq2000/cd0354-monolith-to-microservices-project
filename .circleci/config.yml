@@ -8,13 +8,13 @@ jobs:
       - run:
           name: Build front-end
           command: |
-            cd frontend
-            docker build -t datht20fpt/capstone-frontend .
+            cd udagram-frontend
+            docker build -t datht20fpt/udagram-frontend .
       - run:
           name: Publish Docker Image to Docker Hub
           command: |
             docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
-            docker push datht20fpt/capstone-frontend:latest
+            docker push datht20fpt/udagram-frontend:latest
 workflows:
   version: 2
   deploy_workflow:
