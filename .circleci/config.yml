@@ -8,6 +8,7 @@ jobs:
       - run:
           name: Build front-end
           command: |
+            pwd
             cd udagram-frontend
             docker build -t datht20fpt/udagram-frontend .
       - run:
