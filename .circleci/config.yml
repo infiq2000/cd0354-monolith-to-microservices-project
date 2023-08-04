@@ -7,125 +7,46 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - restore_cache:
-          keys:
-            - v1-{{ .Branch }}
-          paths:
-            - /caches/udagram-frontend.tar
-      - run:
-          name: Load Docker image layer cache
-          command: |
-            # set +o pipefail
-            if [[ -f "/caches/app.tar" ]]; then
-              docker load -i /caches/app.tar | true
-            fi
       - run:
           name: Build front-end
           command: |
             cd udagram-frontend
             docker build -t datht20fpt/udagram-frontend .
       - run:
-          name: Save Docker image layer cache
-          command: |
-            mkdir -p /caches
-            docker save -o /caches/udagram-frontend.tar datht20fpt/udagram-frontend
-      - save_cache:
-          key: v1-{{ .Branch }}-{{ epoch }}
-          paths:
-            - /caches/udagram-frontend.tar
-      - run:
           name: Publish Docker Image to Docker Hub
           command: |
             docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
-            docker push datht20fpt/udagram-frontend:latest
-      - restore_cache:
-          keys:
-            - v1-{{ .Branch }}
-          paths:
-            - /caches/udagram-api-feed.tar
-      - run:
-          name: Load Docker image layer cache
-          command: |
-            # set +o pipefail
-            if [[ -f "/caches/app.tar" ]]; then
-              docker load -i /caches/app.tar | true
-            fi
+            docker push datht20fpt/udagram-frontend
       - run:
           name: Build feed-backend
           command: |
             cd feed-service
             docker build -t datht20fpt/udagram-api-feed .
       - run:
-          name: Save Docker image layer cache
+          name: Publish Docker Image to Docker Hub
           command: |
-            mkdir -p /caches
-            docker save -o /caches/udagram-api-feed.tar datht20fpt/udagram-api-feed
-      - save_cache:
-          key: v1-{{ .Branch }}-{{ epoch }}
-          paths:
-            - /caches/udagram-api-feed.tar
-      - restore_cache:
-          keys:
-            - v1-{{ .Branch }}
-          paths:
-            - /caches/udagram-api-user.tar
+            docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
+            docker push datht20fpt/udagram-api-feed
       - run:
-          name: Load Docker image layer cache
-          command: |
-            # set +o pipefail
-            if [[ -f "/caches/app.tar" ]]; then
-              docker load -i /caches/app.tar | true
-            fi
-      - run:
-          name: Build feed-backend
+          name: Build user-backend
           command: |
             cd user-service
             docker build -t datht20fpt/udagram-api-user .
       - run:
-          name: Save Docker image layer cache
-          command: |
-            mkdir -p /caches
-            docker save -o /caches/udagram-api-user.tar datht20fpt/udagram-api-user
-      - save_cache:
-          key: v1-{{ .Branch }}-{{ epoch }}
-          paths:
-            - /caches/udagram-api-user.tar
-      - run:
           name: Publish Docker Image to Docker Hub
           command: |
             docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
-            docker push datht20fpt/udagram-api-user:latest
-      - restore_cache:
-          keys:
-            - v1-{{ .Branch }}
-          paths:
-            - /caches/reverseproxy.tar
+            docker push datht20fpt/udagram-api-user
       - run:
-          name: Load Docker image layer cache
-          command: |
-            # set +o pipefail
-            if [[ -f "/caches/app.tar" ]]; then
-              docker load -i /caches/app.tar | true
-            fi
-      - run:
-          name: Build feed-backend
+          name: Build reverseproxy
           command: |
             cd reverse-proxy
             docker build -t datht20fpt/reverseproxy .
       - run:
-          name: Save Docker image layer cache
-          command: |
-            mkdir -p /caches
-            docker save -o /caches/reverseproxy.tar datht20fpt/reverseproxy
-      - save_cache:
-          key: v1-{{ .Branch }}-{{ epoch }}
-          paths:
-            - /caches/reverseproxy.tar
-      - run:
           name: Publish Docker Image to Docker Hub
           command: |
             docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASS"
-            docker push datht20fpt/reverseproxy:latest
+            docker push datht20fpt/reverseproxy
 workflows:
   version: 2
   deploy_workflow:
