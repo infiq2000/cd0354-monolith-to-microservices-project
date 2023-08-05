@@ -44,6 +44,9 @@ import { V0_USER_MODELS } from "./controllers/v0/model.index";
   app.get("/", async (req, res) => {
     res.send("/api/v0/");
   });
+  app.get("*", async (req, res) => {
+    res.send("hello. im underwater");
+  });
 
   // Start the Server
   app.listen(port, () => {

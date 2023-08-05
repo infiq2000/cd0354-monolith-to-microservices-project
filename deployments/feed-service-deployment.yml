@@ -5,7 +5,7 @@ metadata:
     service: feed-service
   name: feed-service
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       service: feed-service
