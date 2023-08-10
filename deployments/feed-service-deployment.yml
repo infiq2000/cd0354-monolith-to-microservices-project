@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - image: datht20fpt/udagram-api-feed
-          name: udagram-api-feed
+          name: feed-service
           imagePullPolicy: Always
           resources:
             requests:
